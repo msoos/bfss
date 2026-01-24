@@ -251,4 +251,3 @@ int main(int argc, char * argv[])
 	string rsFileName = baseFileName + "result.v";
 	performRevSub ( norsfname, rsFileName);
 }
-

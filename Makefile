@@ -33,9 +33,23 @@ UGEN_INCLUDES = -I $(SCALMC_PATH)/build/cmsat5-src/ -I $(SCALMC_PATH)/src/
 LIB_DIRS = -L $(SCALMC_PATH)/build/lib/ -L $(ABC_PATH)/
 DIR_INCLUDES = $(ABC_INCLUDES) $(UGEN_INCLUDES) $(LIB_DIRS)
 
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Darwin)
+BOOST_PREFIX ?= $(shell brew --prefix 2>/dev/null)
+ifeq ($(BOOST_PREFIX),)
+BOOST_PREFIX = /opt/homebrew
+endif
+CPP_FLAGS += -I$(BOOST_PREFIX)/include
+CPP_FLAGS += -Wno-c++11-narrowing
+LIB_UGEN   = -lcryptominisat5
+LIB_ABC    = -labc
+LIB_COMMON = -lm -ldl -lreadline -lpthread -lz
+else
 LIB_UGEN   = -Wl,-Bdynamic -lcryptominisat5
 LIB_ABC    = -Wl,-Bstatic  -labc
 LIB_COMMON = -Wl,-Bdynamic -lm -ldl -lreadline -ltermcap -lpthread -fopenmp -lrt -Wl,-Bdynamic -lboost_program_options -Wl,-Bdynamic -lz
+endif
 
 ifeq ($(UNIGEN), NO)
 CPP_FLAGS += -std=c++11 -DNO_UNIGEN
@@ -95,7 +109,7 @@ $(TARGET_VRFY): $(VRFY_SOURCES)
 	@echo "Built Target! - verify"
 
 $(TARGET_RSUB): $(RSUB_SOURCES)
-	$(CXX) $^ -o $@
+	$(CXX) $(CPP_FLAGS) $^ -o $@
 	@echo "Compiled "$^" successfully!"
 	@echo "Built Target! - revsub"
 

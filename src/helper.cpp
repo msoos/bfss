@@ -36,6 +36,7 @@ int exhaustiveCollapsedTill = 0;
 // 						"--pivotUniGen=27.0", "--maxTotalTime=72000", "--startIteration=0", \
 // 						"--maxLoopTime=3000", "--tApproxMC=1", "--pivotAC=60", "--gaussuntil=400", \
 // 						"--verbosity=0", "--multisample", UNIGEN_DIMAC_FNAME, UNIGEN_MODEL_FPATH};
+#ifndef NO_UNIGEN
 int unigen_argc = 8;
 int unigen_samples_argnum = 1;
 int unigen_threads_argnum = 2;
@@ -44,7 +45,8 @@ char* unigen_argv[] = {"./scalmc", "--samples=2200", "--threads=4", "--kappa=0.6
 						"--startIteration=0", \
 						"--tApproxMC=1", "--pivotAC=60", \
 						UNIGEN_DIMAC_FNAME};
-pthread_t unigen_threadId = -1;
+pthread_t unigen_threadId = 0;
+#endif
 map<int, int> varNum2ID;
 map<int, int> varNum2R0R1;
 int solsJustFetched = 0;
@@ -294,9 +296,11 @@ void parseOptions(int argc, char * argv[]) {
 	}
 	#endif
 
-	unigen_argv[1] = (char*)((new string("--samples="+to_string(options.numSamples)))->c_str());
-	unigen_argv[2] = (char*)((new string("--threads="+to_string(options.numThreads)))->c_str());
-	unigen_argv[13] = (char*)((new string(getFileName(options.benchmark) + "_" + UNIGEN_DIMAC_FPATH))->c_str());
+	#ifndef NO_UNIGEN
+	unigen_argv[unigen_samples_argnum] = (char*)((new string("--samples="+to_string(options.numSamples)))->c_str());
+	unigen_argv[unigen_threads_argnum] = (char*)((new string("--threads="+to_string(options.numThreads)))->c_str());
+	unigen_argv[unigen_cnfname_argnum] = (char*)((new string(getFileName(options.benchmark) + "_" + UNIGEN_DIMAC_FPATH))->c_str());
+	#endif
 
 	cout << "Configuration: " << endl;
 	cout << "{" << endl;
