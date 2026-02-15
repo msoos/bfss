@@ -30,7 +30,7 @@ TARGET_RSUB  = $(BINDIR)/$(RSUB)
 
 ABC_INCLUDES = -I $(ABC_PATH) -I $(ABC_PATH)/src
 UGEN_INCLUDES = -I $(SCALMC_PATH)/build/cmsat5-src/ -I $(SCALMC_PATH)/src/
-LIB_DIRS = -L $(SCALMC_PATH)/build/lib/ -L $(ABC_PATH)/
+LIB_DIRS = -L $(SCALMC_PATH)/build/lib/ -L $(ABC_PATH)/ -L/${HOME}/development/sat_solvers/cryptominisat/build/lib/
 DIR_INCLUDES = $(ABC_INCLUDES) $(UGEN_INCLUDES) $(LIB_DIRS)
 
 UNAME_S := $(shell uname -s)

@@ -50,3 +50,5 @@ tempout
 unigen_output*
 *.zip
 benchmarks/*
+
+.cache
